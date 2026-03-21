@@ -6,10 +6,10 @@ terraform {
     }
   }
   backend "s3" {
-      bucket = "odoo-terraform-state-mgmt"
-      key    = "odoo/terraform.tfstate"
-      region = "us-east-1"
-    }
+    bucket = "odoo-terraform-state-mgmt"
+    key    = "odoo/terraform.tfstate"
+    region = "us-east-1"
+  }
 }
 
 # Configure the AWS Provider
