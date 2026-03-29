@@ -51,6 +51,8 @@ resource "aws_instance" "app_server" {
 
   vpc_security_group_ids = [aws_security_group.odoo_sg.id]
 
+  user_data = file("script.sh")
+
   tags = {
     Name = var.instance_name
   }
