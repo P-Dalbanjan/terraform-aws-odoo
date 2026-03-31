@@ -6,7 +6,7 @@ terraform {
     }
   }
   backend "s3" {
-    bucket = "odoo-terraform-state-mgmt"
+    bucket = "tfstate-852857243302-us-east-1-an"
     key    = "odoo/terraform.tfstate"
     region = "us-east-1"
   }

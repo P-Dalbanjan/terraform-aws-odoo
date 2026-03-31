@@ -1,7 +1,3 @@
-data "aws_vpc" "default_vpc" {
-  default = true
-}
-
 resource "aws_key_pair" "odoo_key" {
   key_name   = "Odoo-Instance-Key"
   public_key = file("odoo-key.pub") # add your own key.pub
@@ -20,6 +16,14 @@ resource "aws_security_group" "odoo_sg" {
     cidr_blocks = ["0.0.0.0/0"] # open to all (public access)
   }
 
+  ingress {
+    description = "SSH"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["${chomp(data.http.my_ip.response_body)}/32"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -32,36 +36,17 @@ resource "aws_security_group" "odoo_sg" {
   }
 }
 
-data "aws_ami" "ubuntu" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*"]
-  }
-
-  owners = ["099720109477"] # Canonical
-}
-
 resource "aws_instance" "app_server" {
   ami           = data.aws_ami.ubuntu.id
-  instance_type = var.instance_type[2]
+  instance_type = var.instance_type
 
   key_name = aws_key_pair.odoo_key.key_name
 
   vpc_security_group_ids = [aws_security_group.odoo_sg.id]
 
-  user_data = file("script.sh")
+  user_data = file("${path.module}/script.sh")
 
   tags = {
     Name = var.instance_name
-  }
-}
-
-resource "aws_eip" "odoo_ip" {
-  instance = aws_instance.app_server.id
-  domain   = "vpc"
-  tags = {
-    Name = "odoo-eip"
   }
 }

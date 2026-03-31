@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 
 # -----------------------------
 # System update & prerequisites
@@ -33,26 +33,24 @@ sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin d
 sudo systemctl enable docker
 sudo systemctl start docker
 
+# Give ubuntu access to docker
+usermod -aG docker ubuntu
+
 # -----------------------------
-# Git installation & repo setup
-# Clones the Odoo Docker project
+# Run app setup as ubuntu user
 # -----------------------------
-sudo apt install -y git
+sudo -u ubuntu -i <<'EOF'
+
 git clone https://github.com/P-Dalbanjan/odoo-docker.git
 cd odoo-docker
 
-# -----------------------------
-# Secure PostgreSQL password setup
-# Generates a strong random password
-# and restricts file permissions
-# -----------------------------
+# Generate secure password
 openssl rand -base64 24 > odoo_pg_pass
-chmod 600 odoo_pg_pass
+chmod 644 odoo_pg_pass
 
-# -----------------------------
-# Start Odoo services
-# Runs containers in detached mode
-# -----------------------------
-sudo docker compose up -d
+# Start services
+docker compose up -d
+
+EOF
 
 echo "Setup complete"
