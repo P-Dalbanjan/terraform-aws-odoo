@@ -1,6 +1,8 @@
 #!/bin/bash
 set -ex
 
+exec > /var/log/startup.log 2>&1
+
 # -----------------------------
 # System update & prerequisites
 # -----------------------------
