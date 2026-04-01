@@ -18,7 +18,7 @@ Ideal for **learning**, **development**, and **lightweight production use cases*
 
 The deployment provisions AWS infrastructure and configures the server automatically:
 
-![Architechtural Diagram of Odoo using Terraform.](./assets/architechture.png)
+![Architechtural Diagram of Odoo using Terraform.](./assets/architecture.png)
 
 * **AWS EC2 Instance**
   Runs an Ubuntu server (`t3.small` by default) to host the application.
